@@ -3,7 +3,7 @@ from copy import deepcopy
 import numpy as np
 import matplotlib.pyplot as plt
 
-FLAG_policy = False
+FLAG_policy = True
 # FLAG_policy = True
 # flag to plot polciy after each episode
 
@@ -74,7 +74,10 @@ def learnTask(env, Q, epsilon = 0.3, alpha = 0.6, discount = 0.9):
 			not_change_count = 0
 
 		if FLAG_policy == True:
-			plot_policy(Q, episode)
+			if (episode-1)%50 == 0:
+				plot_policy(Q, episode)
+	print("Total no. of episodes: %d" %episode)
+	print("Total no. of steps: %d" %tot_step)
 
 if __name__ == "__main__":
 
