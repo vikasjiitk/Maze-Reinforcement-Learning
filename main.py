@@ -3,8 +3,8 @@ from copy import deepcopy
 import numpy as np
 import matplotlib.pyplot as plt
 
-FLAG_policy = True
 # FLAG_policy = True
+FLAG_policy = False
 # flag to plot polciy after each episode
 
 def plot_policy(Q, num):
@@ -14,7 +14,7 @@ def plot_policy(Q, num):
 	plot =  [[max(Q[i][j]) for i in range(grid_size)] for j in range(grid_size)]
 	plt.imshow(plot, interpolation='none', cmap='gray')
 	if num == 0:
-		plt.savefig("policies/base_policy.png")
+		plt.savefig("policies/final_policy.png")
 	else:
 		plt.savefig("policies/policy_%d.png" % (num))
 
