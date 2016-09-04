@@ -20,7 +20,7 @@ class Maze(object):
 	def state(self):
 		return self.curr_state
 
-	def draw(self, path = "", num1 = 1):
+	def draw(self, path = ""):
 		# draw the maze configiration
 		self.grid = np.zeros((self.grid_size, self.grid_size))
 		for i in self.free_states:
@@ -29,7 +29,7 @@ class Maze(object):
 		plt.figure(0)
 		plt.clf()
 		plt.imshow(self.grid, interpolation='none', cmap='gray')
-		plt.savefig(path + "%d.png" % (num1))
+		plt.savefig(path + "maze.png")
 
 	def act(self, action):
 		if(action == -1):
