@@ -1,9 +1,26 @@
 from maze import Maze
 from copy import deepcopy
+import numpy as np
+import matplotlib.pyplot as plt
+
+FLAG_policy = False
+# FLAG_policy = True
+# flag to plot polciy after each episode
+
+def plot_policy(Q, num):
+	plt.figure(1)
+	plt.clf()
+	grid_size = len(Q)
+	plot =  [[max(Q[i][j]) for i in range(grid_size)] for j in range(grid_size)]
+	plt.imshow(plot, interpolation='none', cmap='gray')
+	if num == 0:
+		plt.savefig("policies/base_policy.png")
+	else:
+		plt.savefig("policies/policy_%d.png" % (num))
 
 def change(Q1, Q2, env):
 	thres = 0.0 
-	for i in env.free_cells:
+	for i in env.free_states:
 		prev_val = sum(Q1[i[0]][i[1]])
 		new_val = sum(Q2[i[0]][i[1]])
 		if(abs(prev_val - new_val) > thres):
@@ -13,7 +30,7 @@ def change(Q1, Q2, env):
 			change = 0
 	return change
 
-def learnTask(env, Q):
+def learnTask(env, Q, epsilon = 0.3, alpha = 0.6, discount = 0.9):
 	grid_size = len(Q)
 	num_actions = env.num_actions
 
@@ -56,7 +73,12 @@ def learnTask(env, Q):
 		else:
 			not_change_count = 0
 
+		if FLAG_policy == True:
+			plot_policy(Q, episode)
+
 if __name__ == "__main__":
+
+	print("Initializing")
 
 	grid_size = 11
 	# gridsize defines the area of the maze (gridsize X gridsize)
@@ -71,14 +93,21 @@ if __name__ == "__main__":
 	Q = [[[0,0,0,0] for i in range(grid_size)] for j in range(grid_size)]
 	# Q table for storing value corresponing to each action-state pair
 
+	print("Creating Maze Environment")
 	env = Maze(grid_size, free_states, goal)
 	# creating an instance of maze class
 
-	env.draw()
+	print("Drawing the Maze Task")
+	env.draw("task/")
 	# plot the maze with the specified free_states and goal positions
+	# in task folder
 
+	print("Learning the policy")
 	learnTask(env, Q)
 	#learn the policy using Q-learning
 
-	plotPolicy(Q)
+	print("Plotting the learned policy")
+	plot_policy(Q, 0)
 	# plot the action-value function 
+
+	print("Done! checkout task and policies folders")
