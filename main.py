@@ -1,6 +1,18 @@
 from maze import Maze
 from copy import deepcopy
 
+def change(Q1, Q2, env):
+	thres = 0.0 
+	for i in env.free_cells:
+		prev_val = sum(Q1[i[0]][i[1]])
+		new_val = sum(Q2[i[0]][i[1]])
+		if(abs(prev_val - new_val) > thres):
+			change = 1
+			break
+		else:
+			change = 0
+	return change
+
 def learnTask(env, Q):
 	grid_size = len(Q)
 	num_actions = env.num_actions
