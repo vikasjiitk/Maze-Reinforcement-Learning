@@ -1,4 +1,48 @@
 from maze import Maze
+from copy import deepcopy
+
+def learnTask(env, Q):
+	grid_size = len(Q)
+	num_actions = env.num_actions
+
+	## Learning source task
+
+	tot_step = 0 # to count total no. of steps
+	episode = 0 # to count total no. of episodes
+	not_change_count = 0 # to check if Q function is changed or not
+	change_no = 5 # required number of episodes for which Q function should be unchanged before stopping
+
+	while (True):
+		env.reset()
+		game_over = False
+		max_step = 100  # max number of steps for an episode, after max_iter steps, the episode ends
+		step = 0
+		episode += 1
+		Q2 = deepcopy(Q)
+		while not (game_over or step > max_step):
+			step += 1
+			curr_state = env.state()
+			if np.random.rand() <= epsilon:  # epsilon-greedy policy
+				action = np.random.randint(0, num_actions)
+			else:
+				if(max(Q[curr_state[0]][curr_state[1]]) == min(Q[curr_state[0]][curr_state[1]])):
+					action = -1
+					# if Q[] function is unable to select action, then no action taken
+				else:
+					action = np.argmax(Q[curr_state[0]][curr_state[1]])
+					# best action from Q table
+			next_state, reward, game_over = env.act(action)
+			# Q-learning update
+			Q[curr_state[0]][curr_state[1]][action] = Q[curr_state[0]][curr_state[1]][action] + alpha*(reward + discount*max(Q[next_state[0]][next_state[1]]) - Q[curr_state[0]][curr_state[1]][action])
+		tot_step += step
+		if (step > max_step):
+			not_change_count = 0
+		elif not change(Q, Q2, env):
+			not_change_count += 1
+			if(not_change_count == change_no):
+				break
+		else:
+			not_change_count = 0
 
 if __name__ == "__main__":
 
